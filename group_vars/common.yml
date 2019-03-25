@@ -1,0 +1,88 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           group_vars/common.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+ansible_user: "pi"
+ansible_ssh_pass: "raspberry"
+
+hostname:
+
+  configure: False
+  value: ""
+
+motd:
+
+  configure: True
+  value: ""
+
+apt:
+
+  configure: True
+
+user:
+
+  configure: True
+
+  add:
+
+    configure: True
+    name: "my_username"
+    public_key: "/keys/id_rsa.pub"
+
+  remove:
+
+    configure: True
+    name: "pi"
+
+ethernet:
+
+  configure: False
+  interface: "eth0"
+  ip_address: ""
+  routers: "192.168.1.1"
+  dns_servers: "192.168.1.1 8.8.8.8 8.8.4.4"
+
+wifi:
+
+  configure: True
+  country: "US"
+  ssid: "wifi_ssid"
+  password: "wifi_password"
+
+locale:
+
+  configure: True
+  locales:
+    - "en_US.UTF-8"
+    - "fr_FR.UTF-8"
+  default: "en_US.UTF-8"
+
+timezone:
+
+  configure: True
+  value: "America/Los_Angeles"
+
+ssh:
+
+  configure: True
+
+zsh:
+
+  configure: True
+
+docker:
+
+  configure: True
+
+monit:
+
+  configure: True
+  port: 2812
+  allow_ip: "192.168.1.1/24"
+
+################################################################################################################################################################

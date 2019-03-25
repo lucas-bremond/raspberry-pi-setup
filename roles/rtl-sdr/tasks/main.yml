@@ -1,0 +1,40 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           roles/rtl-sdr/tasks/main.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+- name: Clone RTL-SDR git repository
+  git:
+    repo: https://github.com/bemasher/rtl-sdr.git
+    version: master
+    dest: ~/rtl-sdr
+
+- name: Build the RTL-SDR Docker image
+  command: docker build --tag="bemasher/rtl-sdr" ~/rtl-sdr
+
+- name: Run the RTL-SDR Docker container
+  docker_container:
+    name: rtl-sdr
+    image: "bemasher/rtl-sdr"
+    command: rtl_tcp -a 0.0.0.0
+    state: started
+    detach: yes
+    recreate: yes
+    restart: yes
+    restart_policy: "always"
+    privileged: yes
+    ports:
+     - "1234:1234"
+    volumes:
+     - "/dev/bus/usb:/dev/bus/usb"
+
+- name: Delete the RTL-SDR git repository
+  file:
+    path: ~/rtl-sdr
+    state: absent
+
+################################################################################################################################################################

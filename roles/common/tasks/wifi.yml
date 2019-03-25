@@ -1,0 +1,20 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           roles/common/tasks/wifi.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+- name: Add WiFi configuration
+  template:
+    src: ../templates/wpa_supplicant.conf
+    dest: /etc/wpa_supplicant/wpa_supplicant.conf
+  become: yes
+
+- name: Reconfigure WiFi
+  command: wpa_cli -i wlan0 reconfigure
+  become: yes
+
+################################################################################################################################################################

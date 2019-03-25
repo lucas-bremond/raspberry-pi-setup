@@ -1,0 +1,19 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           roles/common/tasks/ssh.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+- name: Configure SSH
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication no"
+    state: present
+  become: yes
+  notify: restart ssh
+
+################################################################################################################################################################

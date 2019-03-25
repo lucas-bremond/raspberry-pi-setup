@@ -1,0 +1,49 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           roles/dns/tasks/main.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+- name: Install DNS utilities
+  apt:
+    name: ['bind9', 'bind9utils', 'dnsutils']
+    update_cache: yes
+  become: yes
+  when: dns.configure
+
+- name: Configure named.conf.local
+  template:
+    src: "../templates/named.conf.local"
+    dest: "/etc/bind/named.conf.local"
+  become: yes
+  notify: restart bind
+  when: dns.configure
+
+- name: Configure db.{{ dns.forward_lookup_zone }}
+  template:
+    src: "../templates/db.forward"
+    dest: "/etc/bind/db.{{ dns.forward_lookup_zone }}"
+  become: yes
+  notify: restart bind
+  when: dns.configure
+
+- name: Configure db.rev.{{ dns.reverse_lookup_zone }}.in-addr.arpa
+  template:
+    src: "../templates/db.reverse"
+    dest: "/etc/bind/db.rev.{{ dns.reverse_lookup_zone }}.in-addr.arpa"
+  become: yes
+  notify: restart bind
+  when: dns.configure
+
+- name: Configure named.conf.options
+  template:
+    src: "../templates/named.conf.options"
+    dest: "/etc/bind/named.conf.options"
+  become: yes
+  notify: restart bind
+  when: dns.configure
+
+################################################################################################################################################################

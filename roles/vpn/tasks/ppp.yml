@@ -1,0 +1,59 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           roles/vpn/tasks/ppp.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+- name: ppp | Set /etc/pam.d/ppp
+  template:
+    src: ppp/pam-ppp.j2
+    dest: /etc/pam.d/ppp
+    owner: root
+  become: yes
+
+- name: ppp | Create/var/log/ppp-ipupdown.log
+  file:
+    path: /var/log/ppp-ipupdown.log
+    state: touch
+  become: yes
+
+- name: ppp | Deploy /etc/ppp/options.xl2tpd
+  template:
+    src: ppp/options.xl2tpd.j2
+    dest: /etc/ppp/options.xl2tpd
+    owner: root
+  become: yes
+  notify: restart xl2tpd
+
+- name: ppp | Set /etc/ppp/pap-secrets
+  template:
+    src: ppp/pap-secrets.j2
+    dest: /etc/ppp/pap-secrets
+    owner: root
+  become: yes
+  notify: restart openswan
+
+- name: ppp | Set pap-secrets
+  template:
+    src: ppp/pap-secrets.j2
+    dest: /etc/ppp/pap-secrets
+    owner: root
+  become: yes
+  notify:
+     - restart openswan
+     - restart xl2tpd
+
+- name: ppp | Set chap-secrets
+  template:
+    src: ppp/chap-secrets.j2
+    dest: /etc/ppp/chap-secrets
+    owner: root
+  become: yes
+  notify:
+     - restart openswan
+     - restart xl2tpd
+
+################################################################################################################################################################

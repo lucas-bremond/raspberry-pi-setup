@@ -1,0 +1,55 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           roles/common/handlers/main.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+- name: reboot
+  shell: "sleep 5 && reboot"
+  async: 1
+  poll: 0
+  ignore_errors: true
+  become: yes
+
+- name: wait for server to restart
+  wait_for_connection:
+    connect_timeout: 20
+    sleep: 5
+    delay: 5
+    timeout: 300
+  become: false
+
+- name: restart ssh
+  service:
+    name: ssh
+    state: restarted
+  become: yes
+
+- name: reload networking
+  service:
+    name: networking
+    state: reloaded
+  become: yes
+
+- name: restart cron
+  service:
+    name: cron
+    state: restarted
+  become: yes
+
+- name: restart dhcp
+  service:
+    name: dhcpcd
+    state: restarted
+  become: yes
+
+- name: reload monit
+  service:
+    name: monit
+    state: reloaded
+  become: yes
+
+################################################################################################################################################################

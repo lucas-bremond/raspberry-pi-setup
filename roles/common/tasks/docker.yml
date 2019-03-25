@@ -1,0 +1,38 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           roles/common/tasks/docker.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+- name: Download Docker install script
+  get_url:
+    url: https://get.docker.com
+    dest: ~/install_docker.sh
+
+- name: Install Docker
+  command: sh ./install_docker.sh
+  args:
+    creates: /usr/bin/docker
+  become: yes
+
+- name: Install docker-py
+  pip:
+    name: docker-py
+  become: yes
+
+- name: Add {{ user.add.name }} to docker group
+  user:
+    name: "{{ user.add.name }}"
+    groups: docker
+    append: yes
+  become: yes
+
+- name: Delete Docker install script
+  file:
+    path: ~/install_docker.sh
+    state: absent
+
+################################################################################################################################################################

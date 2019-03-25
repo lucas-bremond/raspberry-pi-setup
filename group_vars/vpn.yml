@@ -1,0 +1,39 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           group_vars/vpn.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+vpn:
+
+  configure: True
+  gateway_ip_address: "192.168.1.1"
+  public_address: "192.168.1.5"
+  auth_method: "psk"
+  psk:
+    shared_secret: "some_secret"
+  rsa:
+    cert_password : "123456"
+    left_fqdn : "host.example.com"
+    left_cert_file : "host.example.com.pem"
+  ipsec:
+    nat_traversal: "yes"
+  virtual_private:
+    - name: VPN IP Range
+      v: 4
+      network: "172.16.0.0/12"
+    - name: Private Network
+      v: 4
+      network: "192.168.1.0/24"
+  vpn_gateway : "172.16.1.8" # Server IP
+  vpn_range : "172.16.1.10-172.16.1.254" # IP's to give to the connecting clients
+  ppp_debug: "True"
+  users:
+  - name: "user@example.com"
+    password: "password"
+    ip_address: "192.168.1.200"
+
+################################################################################################################################################################

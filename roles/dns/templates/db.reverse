@@ -1,0 +1,19 @@
+@ IN SOA {{ dns.server_hostname }}.{{ dns.forward_lookup_zone }}. hostmaster.{{ dns.forward_lookup_zone }}. (
+    2017081401 ; serial
+    8H ; refresh
+    4H ; retry
+    4W ; expire
+    1D ; minimum
+)
+                            IN NS {{ dns.server_hostname }}.{{ dns.forward_lookup_zone }}.
+
+{% if dns.hosts is defined %}
+{% for host in dns.hosts %}
+{{ host.ip }} IN PTR {{ host.name }}.{{ dns.forward_lookup_zone }}.
+{% if host['aliases'] is defined %}
+{% for alias in host['aliases'] %}
+{{ host.ip }} IN PTR {{ alias }}.{{ dns.forward_lookup_zone }}.
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}

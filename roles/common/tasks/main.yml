@@ -1,0 +1,58 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           roles/common/tasks/main.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+- name: Set hostname
+  include: hostname.yml
+  when: hostname.configure
+
+- name: Set Message of the Day
+  include: motd.yml
+  when: motd.configure
+
+- name: Configure APT
+  include: apt.yml
+  when: apt.configure
+
+- name: Configure user
+  include: user.yml
+  when: user.configure
+
+- name: Configure locales
+  include: locale.yml
+  when: locale.configure
+
+- name: Configure timezone
+  include: timezone.yml
+  when: timezone.configure
+
+- name: Configure Ethernet
+  include: ethernet.yml
+  when: ethernet.configure
+
+- name: Configure WiFi
+  include: wifi.yml
+  when: wifi.configure
+
+- name: Configure SSH
+  include: ssh.yml
+  when: ssh.configure
+
+- name: Configure ZSH
+  include: zsh.yml
+  when: zsh.configure
+
+- name: Configure Docker
+  include: docker.yml
+  when: docker.configure
+
+- name: Configure Monit
+  include: monit.yml
+  when: monit.configure
+
+################################################################################################################################################################

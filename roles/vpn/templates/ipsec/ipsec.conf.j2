@@ -1,0 +1,69 @@
+version 2.0
+config setup
+
+    nat_traversal={{ vpn.ipsec.nat_traversal }}
+    oe=off
+    dumpdir=/var/run/pluto/
+    protostack=netkey
+    virtual_private=%v4:192.168.0.0/16,%v4:10.0.0.0/8,%v4:172.16.0.0/12,%v4:25.0.0.0/8,%v4:!10.25$
+    # virtual_private={% for range in vpn.virtual_private -%}%v{{ range.v}}:{{ range.network }}{{ ',' if loop.index < vpn.virtual_private | length else "" }}{%- endfor %}
+
+conn L2TP-PSK-NAT
+
+    also=L2TP-PSK-noNAT
+    rightsubnet=vhost:%priv
+
+conn L2TP-PSK-noNAT
+
+    # authby=secret
+    # auto=add
+    # ikelifetime=8h
+    # keyingtries=3
+    # keylife=1h
+    # pfs=no
+    # rekey=yes
+    # type=transport
+    # left={{ vpn.public_address }}
+    # leftprotoport=17/1701
+    # right=%any
+    # rightprotoport=17/%any
+
+    authby=secret
+    pfs=no
+    auto=add
+    keyingtries=3
+    # we cannot rekey for %any, let client rekey
+    rekey=no
+    # Apple iOS doesn't send delete notify so we need dead peer detection
+    # to detect vanishing clients
+    dpddelay=30
+    dpdtimeout=120
+    dpdaction=clear
+    # Set ikelifetime and keylife to same defaults windows has
+    ikelifetime=8h
+    keylife=1h
+    # l2tp-over-ipsec is transport mode
+    type=transport
+    #
+    left={{ vpn.public_address }}
+    #
+    # For updated Windows 2000/XP clients,
+    # to support old clients as well, use leftprotoport=17/%any
+    leftprotoport=17/1701
+    #
+    # The remote user.
+    #
+    right=%any
+    # Using the magic port of "%any" means "any one single port". This is
+    # a work around required for Apple OSX clients that use a randomly
+    # high port.
+    rightprotoport=17/%any
+    #force all to be nat'ed. because of ios
+    forceencaps=yes
+
+########################
+## Public IP to use with VPN : {{ vpn.public_address }}
+## Subnets that will be routed
+{% for range in vpn.virtual_private %}
+#  - IPv{{ range.v}} : {{ range.network }} : {{ range.name if  range.name is defined else ""}}
+{% endfor %}

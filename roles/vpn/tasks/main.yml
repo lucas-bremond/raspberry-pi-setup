@@ -1,0 +1,28 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           roles/vpn/tasks/main.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+- include: install.yml
+  when: vpn.configure
+
+# - include: ip_rules.yml
+#   when: vpn.configure
+
+- include: network.yml
+  when: vpn.configure
+
+- include: ppp.yml
+  when: vpn.configure
+
+- include: xl2tpd.yml
+  when: vpn.configure
+
+- include: ipsec.yml
+  when: vpn.configure
+
+################################################################################################################################################################

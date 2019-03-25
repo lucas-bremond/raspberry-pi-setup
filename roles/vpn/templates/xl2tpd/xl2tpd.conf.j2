@@ -1,0 +1,13 @@
+[global]
+ipsec saref = yes
+listen-addr = {{ vpn.public_address }}
+
+[lns default]
+ip range = {{ vpn.vpn_range }}
+local ip = {{ vpn.vpn_gateway }}
+refuse chap = yes
+refuse pap = yes
+require authentication = yes
+ppp debug = {{ vpn.ppp_debug }}
+pppoptfile = /etc/ppp/options.xl2tpd
+length bit = yes

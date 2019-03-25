@@ -1,0 +1,46 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           roles/common/tasks/user.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+- name: Add user {{ user.add.name }}
+  user:
+    name: "{{ user.add.name }}"
+    group: sudo
+    createhome: yes
+    shell: /bin/bash
+  become: yes
+  when: user.add.configure
+
+- name: Set passwordless sudo
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^%sudo'
+    line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+  become: yes
+  when: user.add.configure
+
+- name: Deploy SSH key for user {{ user.add.name }}
+  authorized_key:
+    user: "{{ user.add.name }}"
+    key: "{{ lookup('file', '{{ user.add.public_key }}') }}"
+    state: present
+  become: yes
+  when: user.add.configure
+
+- name: Remove user {{ user.remove.name }}
+  user:
+    name: "{{ user.remove.name }}"
+    state: absent
+    remove: yes
+    force: yes
+  become: yes
+  when: user.remove.configure
+
+################################################################################################################################################################

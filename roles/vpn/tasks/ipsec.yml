@@ -1,0 +1,26 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           roles/vpn/tasks/ipsec.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+- name: ipsec | Set /etc/ipsec.conf
+  template:
+    src: ipsec/ipsec.conf.j2
+    dest: /etc/ipsec.conf
+    owner: root
+  become: yes
+  notify: restart openswan
+
+- name: ipsec | Set /etc/ipsec.secrets
+  template:
+    src: ipsec/ipsec.secrets.j2
+    dest: /etc/ipsec.secrets
+    owner: root
+  become: yes
+  notify: restart openswan
+
+################################################################################################################################################################

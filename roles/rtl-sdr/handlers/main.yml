@@ -1,0 +1,25 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           roles/rtl-sdr/handlers/main.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+- name: restart machine
+  shell: reboot
+  async: 1
+  poll: 0
+  ignore_errors: true
+  become: yes
+
+- name: wait for server to restart
+  wait_for_connection:
+    connect_timeout: 20
+    sleep: 5
+    delay: 5
+    timeout: 300
+  become: false
+
+################################################################################################################################################################

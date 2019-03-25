@@ -1,0 +1,38 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           roles/vpn/tasks/ip_rules.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+- name: ip_rules | Fetch private IP match rule
+  iplookup:
+    ips: "{{ ansible_all_ipv4_addresses }}"
+    rules : "{{ vpn.private_address_rule }}"
+  connection: local
+  sudo: False
+  register: private_ip
+  when: vpn.private_address is not defined or vpn.private_address == ''
+
+- name: ip_rules | Set private IP match rule
+  set_fact:
+    vpn.private_address="{{ private_ip.matched_ip }}"
+  when: vpn.private_address is not defined or vpn.private_address == ""
+
+- name: ip_rules | Fetch public IP match rule
+  iplookup:
+    ips: "{{ ansible_all_ipv4_addresses}}"
+    rules : "{{ vpn.public_address_rule }}"
+  connection: local
+  register: public_ip
+  sudo: False
+  when: vpn.public_address is not defined or vpn.public_address == ''
+
+- name: ip_rules | Set public_ip IP match rule
+  set_fact:
+    vpn.public_address="{{ public_ip.matched_ip }}"
+  when: vpn.public_address is not defined or vpn.public_address == ""
+
+################################################################################################################################################################

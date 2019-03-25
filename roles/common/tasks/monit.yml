@@ -1,0 +1,36 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           roles/common/tasks/monit.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+- name: Installing Monit
+  apt:
+    name: ['monit']
+    state: present
+  become: yes
+
+- name: Copy Monit config
+  template:
+    src: monit/monitrc.j2
+    dest: /etc/monit/monitrc
+  become: yes
+  notify:
+    - reload monit
+
+- name: Copy systemd config
+  copy:
+    src: monit/monit.service
+    dest: /lib/systemd/system/monit.service
+  become: yes
+
+- name: Start Monit on boot
+  systemd:
+    name: monit
+    state: started
+  become: yes
+
+################################################################################################################################################################

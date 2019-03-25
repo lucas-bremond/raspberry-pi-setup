@@ -1,0 +1,29 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           roles/dns/handlers/main.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+- name: restart machine
+  shell: reboot
+  async: 1
+  poll: 0
+  ignore_errors: true
+  become: yes
+
+- name: restart openswan
+  service:
+    name: ipsec
+    state: restarted
+  become: yes
+
+- name: restart xl2tpd
+  service:
+    name: xl2tpd
+    state: restarted
+  become: yes
+
+################################################################################################################################################################

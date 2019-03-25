@@ -1,0 +1,23 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           roles/common/tasks/hostname.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+- name: Set hostname to {{ hostname.value }}
+  hostname:
+    name: "{{ hostname.value }}"
+  become: yes
+
+- name: Set hostname in /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    regexp: "^127\\.0\\.1\\.1[ ]*(?:(?!localhost).)*$"
+    line: "127.0.1.1       {{ hostname.value }}"
+    state: present
+  become: yes
+
+################################################################################################################################################################

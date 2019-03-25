@@ -1,0 +1,9 @@
+zone "{{ dns.forward_lookup_zone }}" IN {
+    type master;
+    file "/etc/bind/db.{{ dns.forward_lookup_zone }}";
+};
+
+zone "{{ dns.reverse_lookup_zone }}" {
+    type master;
+    file "/etc/bind/db.rev.{{ dns.reverse_lookup_zone }}.in-addr.arpa";
+};

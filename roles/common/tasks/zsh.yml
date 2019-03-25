@@ -1,0 +1,46 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           roles/common/tasks/zsh.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+- name: Installing Zsh and git
+  apt:
+    name: ['zsh', 'git']
+    state: present
+  become: yes
+
+- name: Installing Oh My Zsh
+  git:
+    repo: https://github.com/robbyrussell/oh-my-zsh
+    dest: ~/.oh-my-zsh
+
+- name: Installing Powerlevel9k
+  git:
+    repo: https://github.com/bhilburn/powerlevel9k.git
+    dest: ~/.oh-my-zsh/custom/themes/powerlevel9k
+
+- name: Installing zsh-autosuggestions
+  git:
+    repo: https://github.com/zsh-users/zsh-autosuggestions
+    dest: ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+
+- name: Installing zsh-syntax-highlighting
+  git:
+    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+    dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+
+- name: Creating ~/.zshrc
+  template:
+    src: ../templates/zsh/zshrc.j2
+    dest: ~/.zshrc
+
+- name: Set user shell to zsh
+  command: chsh -s /bin/zsh "{{ user.add.name }}"
+  become: yes
+  become_user: root
+
+################################################################################################################################################################

@@ -1,0 +1,26 @@
+################################################################################################################################################################
+
+# @project        Raspberry Pi Setup
+# @file           roles/common/tasks/ethernet.yml
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
+- name: Configure static IP
+  become: yes
+  lineinfile:
+    dest: /etc/dhcpcd.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - { regexp: "^interface eth[0-9]$", line: "interface {{ ethernet.interface }}" }
+    - { regexp: "^static ip_address", line: "static ip_address={{ ethernet.ip_address }}" }
+    - { regexp: "^static routers", line: "static routers={{ ethernet.routers }}" }
+    - { regexp: "^static domain_name_servers", line: "static domain_name_servers={{ ethernet.dns_servers }}" }
+  notify:
+    - reboot
+    - wait for server to restart
+
+################################################################################################################################################################
