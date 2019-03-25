@@ -14,7 +14,7 @@ set -e
 
 script_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-ssh_keys="/Users/user/.ssh"
+ssh_keys="${HOME}/.ssh"
 
 docker run \
 -it \
@@ -24,6 +24,6 @@ docker run \
 --workdir="/ansible" \
 --rm \
 williamyeh/ansible:alpine3 \
-ansible-playbook -vvv ${@}
+ansible-playbook ${@}
 
 ################################################################################################################################################################
