@@ -12,19 +12,19 @@
   roles:
     - common
 
-- name: Configure DNS servers
-  hosts: dns
-  roles:
-    - dns
+# - name: Configure DNS servers
+#   hosts: dns
+#   roles:
+#     - dns
 
-- name: Configure VPN servers
-  hosts: vpn
-  roles:
-    - vpn
+# - name: Configure VPN servers
+#   hosts: vpn
+#   roles:
+#     - vpn
 
-- name: Configure RTL-SDR servers
-  hosts: rtl-sdr
-  roles:
-    - rtl-sdr
+# - name: Configure RTL-SDR servers
+#   hosts: rtl-sdr
+#   roles:
+#     - rtl-sdr
 
 ################################################################################################################################################################

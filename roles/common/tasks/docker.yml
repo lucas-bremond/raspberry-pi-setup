@@ -18,6 +18,12 @@
     creates: /usr/bin/docker
   become: yes
 
+- name: Installing pip
+  apt:
+    name: ['python-pip']
+    state: present
+  become: yes
+
 - name: Install docker-py
   pip:
     name: docker-py
